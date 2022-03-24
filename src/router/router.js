@@ -1,5 +1,6 @@
 import AuthorizeBtn from "../components/AuthorizeBtn.vue";
 import HomeAccount from "../components/HomeAccount.vue";
+import {  createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
@@ -15,6 +16,13 @@ const routes = [
 ];
 
 
-export default routes;
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+
+export default router;
 
 
