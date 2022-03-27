@@ -1,17 +1,18 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <AuthorizeBtn />
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import AuthorizeBtn from './components/AuthorizeBtn.vue'
+// import AuthorizeBtn from "./components/AuthorizeBtn.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    AuthorizeBtn
-  }
-}
+    // AuthorizeBtn,
+  },
+};
 </script>
 
 <style>
