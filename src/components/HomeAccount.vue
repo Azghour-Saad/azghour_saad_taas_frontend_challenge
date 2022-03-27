@@ -98,9 +98,9 @@ import { ChevronDownIcon } from "@heroicons/vue/solid";
 // const GITHUB_CLIEN_ID = process.env.GITHUB_CLIENT_ID;
 // const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
-// const GITHUB_CLIEN_ID = config.development.GITHUB_CLIEN_ID;
-// const GITHUB_CLIENT_SECRET = config.development.GITHUB_CLIENT_SECRET;
-// const REDIRECT_URI = config.development.REDIRECT_URI;
+const GITHUB_CLIEN_ID = config.development.GITHUB_CLIEN_ID;
+const GITHUB_CLIENT_SECRET = config.development.GITHUB_CLIENT_SECRET;
+const REDIRECT_URI = config.development.REDIRECT_URI;
 
 export default {
   components: {
@@ -200,7 +200,8 @@ export default {
       const myInit = {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`, // Here i use my token to get all my repo from Github API.
+          // Here i use my token to get all my repo from Github API.
+          // Authorization: `Bearer ${token}`,
         },
 
         mode: "no-cors",
