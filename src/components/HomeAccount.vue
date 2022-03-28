@@ -63,7 +63,8 @@
         </transition>
       </Menu>
     </div>
-    <div>
+
+    <div v-if="isLoading">
       <div v-for="commit in commitInfo" :key="commit.hash">
         <CommitHistory
           v-if="currentRepo === 'crud_agenda'"
@@ -73,6 +74,7 @@
           :authorAvatar="commit.authorAvatar"
         />
       </div>
+
       <div v-for="commit in commitInfoBgJs" :key="commit.hash">
         <CommitHistory
           v-if="currentRepo === 'beginner-javascript'"
@@ -82,6 +84,13 @@
           :authorAvatar="commit.authorAvatar"
         />
       </div>
+      <div
+        v-if="commitInfoBgJs.length || commitInfo.length"
+        v-observe-visibility="handleInfinityScroll"
+      ></div>
+    </div>
+    <div v-else>
+      <Loading />
     </div>
   </div>
 </template>
@@ -89,6 +98,7 @@
 <script>
 import * as config from "../config/config";
 import repo from "../../data/getRepoData.json";
+import Loading from "./Loading.vue";
 import CommitHistory from "./CommitHistory.vue";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/solid";
@@ -106,6 +116,7 @@ export default {
     MenuButton,
     MenuItem,
     MenuItems,
+    Loading,
     CommitHistory,
     ChevronDownIcon,
   },
@@ -116,12 +127,14 @@ export default {
     return {
       config,
       search: "",
+      isLoading: true,
       getRepo: repo,
       getCommit: [],
       getCommitBgJs: [],
       commitInfo: [],
       commitInfoBgJs: [],
       currentRepo: "",
+      page: 1,
       code: this.$route.query.code,
     };
   },
@@ -129,6 +142,7 @@ export default {
   mounted() {
     this.getBgJsCommit();
     this.getCrudAgendaCommit();
+
     // this.requestGithubToken();
     // this.getRepoUser();
   },
@@ -143,6 +157,24 @@ export default {
   },
 
   methods: {
+    handleInfinityScroll(isVisible) {
+      if (!isVisible) {
+        return;
+      }
+
+      if (this.currentRepo === "beginner-javascript") {
+        this.page++;
+        this.getBgJsCommit();
+        this.showCommitBgJs();
+      }
+
+      if (this.currentRepo === "crud_agenda") {
+        this.page++;
+        this.getCrudAgendaCommit();
+        this.showCommit();
+      }
+    },
+
     showCommit(name) {
       this.currentRepo = name;
 
@@ -174,22 +206,30 @@ export default {
     },
 
     async getBgJsCommit() {
+      this.isLoading = false;
       await fetch(
-        `https://api.github.com/repos/Azghour-Saad/beginner-javascript/commits?per_page=30&page=1`
+        `https://api.github.com/repos/Azghour-Saad/beginner-javascript/commits?per_page=20&page=${this.page}`
       )
-        .then((res) => res.json())
+        .then((res) => {
+          return res.json();
+        })
         .then((data) => {
-          this.getCommitBgJs = data;
+          this.getCommitBgJs.push(...data);
+          this.isLoading = true;
         });
     },
 
     async getCrudAgendaCommit() {
+      this.isLoading = false;
       await fetch(
-        `https://api.github.com/repos/Azghour-Saad/crud_agenda/commits?per_page=30&page=1`
+        `https://api.github.com/repos/Azghour-Saad/crud_agenda/commits?per_page=20&page=${this.page}`
       )
-        .then((res) => res.json())
+        .then((res) => {
+          return res.json();
+        })
         .then((data) => {
-          this.getCommit = data;
+          this.getCommit.push(...data);
+          this.isLoading = true;
         });
     },
 
