@@ -89,8 +89,6 @@
 <script>
 import * as config from "../config/config";
 import repo from "../../data/getRepoData.json";
-import commit_crud_agenda from "../../data/get_commit_crud_agenda_repo.json";
-import commit_beginner_javascript from "../../data/get_beginner_javascript _repo.json";
 import CommitHistory from "./CommitHistory.vue";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/solid";
@@ -119,8 +117,8 @@ export default {
       config,
       search: "",
       getRepo: repo,
-      getCommit: commit_crud_agenda,
-      getCommitBgJs: commit_beginner_javascript,
+      getCommit: [],
+      getCommitBgJs: [],
       commitInfo: [],
       commitInfoBgJs: [],
       currentRepo: "",
@@ -129,6 +127,8 @@ export default {
   },
 
   mounted() {
+    this.getBgJsCommit();
+    this.getCrudAgendaCommit();
     // this.requestGithubToken();
     // this.getRepoUser();
   },
@@ -173,11 +173,31 @@ export default {
       });
     },
 
+    async getBgJsCommit() {
+      await fetch(
+        `https://api.github.com/repos/Azghour-Saad/beginner-javascript/commits?per_page=30&page=1`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.getCommitBgJs = data;
+        });
+    },
+
+    async getCrudAgendaCommit() {
+      await fetch(
+        `https://api.github.com/repos/Azghour-Saad/crud_agenda/commits?per_page=30&page=1`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.getCommit = data;
+        });
+    },
+
     async requestGithubToken() {
       const myInit = {
         method: "POST",
         headers: {
-          // Accept: "application/json",   // Added from DOSC but the RES it's Same!
+          // Accept: "application/json",   // Added from DOSC but the Response it's Same!
           "Content-Type": "application/json", //FIXME
         },
         mode: "no-cors",
