@@ -44,7 +44,7 @@
           leave-to-class="transform scale-95 opacity-0"
         >
           <MenuItems
-            class="absolute right-0 w-56 mt-2 overflow-y-auto origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-80"
+            class="absolute w-56 mt-2 overflow-y-auto origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-80"
           >
             <div class="py-1" v-for="item in filterByName" :key="item.id">
               <MenuItem v-slot="{ active }" as="div">
@@ -97,19 +97,56 @@
           leave-to-class="transform scale-95 opacity-0"
         >
           <MenuItems
-            class="absolute right-0 w-24 mt-2 overflow-y-auto origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-80"
+            class="absolute mt-2 overflow-y-auto origin-top-right bg-white rounded-md shadow-lg w-80 ring-1 ring-black ring-opacity-5 focus:outline-none max-h-80"
           >
-            <!-- <div class="py-1" v-for="item in filterByName" :key="item.id"> -->
-            <div class="py-1">
-              <MenuItem v-slot="{ active }" as="div">
-                <!-- @click="showCommit(item.name), showCommitBgJs(item.name)" -->
-                <div
-                  :class="[
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm',
-                  ]"
-                >
-                  main
+            <div
+              v-for="name in branchsBgJs"
+              :key="name"
+              v-show="currentRepo === 'beginner-javascript'"
+              class="py-1"
+            >
+              <MenuItem
+                v-for="item in filterByName"
+                :key="item.id"
+                v-slot="{ active }"
+                as="div"
+              >
+                <div v-if="item.name === 'beginner-javascript'">
+                  <div
+                    @click="showCommitBgJs(item.name)"
+                    :class="[
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block px-4 py-2 text-sm',
+                    ]"
+                  >
+                    {{ name }}
+                  </div>
+                </div>
+              </MenuItem>
+            </div>
+
+            <div
+              v-for="name in branchName"
+              :key="name"
+              v-show="currentRepo === 'crud_agenda'"
+              class="py-1"
+            >
+              <MenuItem
+                v-for="item in filterByName"
+                :key="item.id"
+                v-slot="{ active }"
+                as="div"
+              >
+                <div v-if="item.name === 'crud_agenda'">
+                  <div
+                    @click="showCommit(item.name)"
+                    :class="[
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block px-4 py-2 text-sm',
+                    ]"
+                  >
+                    {{ name }}
+                  </div>
                 </div>
               </MenuItem>
             </div>
@@ -188,6 +225,8 @@ export default {
       commitInfo: [],
       commitInfoBgJs: [],
       currentRepo: "",
+      branchName: [],
+      branchsBgJs: [],
       page: 1,
       code: this.$route.query.code,
     };
@@ -196,6 +235,9 @@ export default {
   mounted() {
     this.getBgJsCommit();
     this.getCrudAgendaCommit();
+
+    this.getBranchByRepo();
+    this.getBranchByCrudRepo();
 
     // this.requestGithubToken();
     // this.getRepoUser();
@@ -270,6 +312,34 @@ export default {
         .then((data) => {
           this.getCommitBgJs.push(...data);
           this.isLoading = true;
+        });
+    },
+
+    async getBranchByCrudRepo() {
+      await fetch(
+        `https://api.github.com/repos/Azghour-Saad/crud_agenda/branches`
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          data.map((branch) => {
+            this.branchName.push(branch.name);
+          });
+        });
+    },
+
+    async getBranchByRepo() {
+      await fetch(
+        `https://api.github.com/repos/Azghour-Saad/beginner-javascript/branches`
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          data.map((branch) => {
+            this.branchsBgJs.push(branch.name);
+          });
         });
     },
 
