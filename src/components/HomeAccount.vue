@@ -64,6 +64,60 @@
       </Menu>
     </div>
 
+    <div class="flex flex-wrap mb-4 ml-8 space-x-4">
+      <Menu as="div" class="relative inline-block text-right">
+        <div>
+          <MenuButton
+            class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm md:visible hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              aria-hidden="true"
+              height="16"
+              viewBox="0 0 16 16"
+              version="1.1"
+              width="16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M11.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122V6A2.5 2.5 0 0110 8.5H6a1 1 0 00-1 1v1.128a2.251 2.251 0 11-1.5 0V5.372a2.25 2.25 0 111.5 0v1.836A2.492 2.492 0 016 7h4a1 1 0 001-1v-.628A2.25 2.25 0 019.5 3.25zM4.25 12a.75.75 0 100 1.5.75.75 0 000-1.5zM3.5 3.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0z"
+              ></path>
+            </svg>
+            <span>main</span>
+            <ChevronDownIcon class="w-5 h-5 ml-2 -mr-1" aria-hidden="true" />
+          </MenuButton>
+        </div>
+
+        <transition
+          enter-active-class="transition duration-100 ease-out"
+          enter-from-class="transform scale-95 opacity-0"
+          enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition duration-75 ease-in"
+          leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-95 opacity-0"
+        >
+          <MenuItems
+            class="absolute right-0 w-24 mt-2 overflow-y-auto origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-80"
+          >
+            <!-- <div class="py-1" v-for="item in filterByName" :key="item.id"> -->
+            <div class="py-1">
+              <MenuItem v-slot="{ active }" as="div">
+                <!-- @click="showCommit(item.name), showCommitBgJs(item.name)" -->
+                <div
+                  :class="[
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm',
+                  ]"
+                >
+                  main
+                </div>
+              </MenuItem>
+            </div>
+          </MenuItems>
+        </transition>
+      </Menu>
+    </div>
+
     <div v-if="isLoading">
       <div v-for="commit in commitInfo" :key="commit.hash">
         <CommitHistory
